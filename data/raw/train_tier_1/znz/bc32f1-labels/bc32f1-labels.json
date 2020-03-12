@@ -1,0 +1,90 @@
+{
+    "type": "Feature",
+    "stac_version": "0.8.1",
+    "id": "bc32f1-labels",
+    "properties": {
+        "label:description": "Geojson building labels for scene bc32f1",
+        "area": "znz",
+        "label:type": "vector",
+        "label:properties": [
+            "building"
+        ],
+        "label:overviews": [
+            {
+                "property_key": [
+                    "building"
+                ],
+                "counts": [
+                    {
+                        "name": "yes",
+                        "count": 97
+                    }
+                ]
+            }
+        ],
+        "datetime": "2016-10-12 00:00:00Z"
+    },
+    "geometry": {
+        "coordinates": [
+            [
+                [
+                    39.344219970219626,
+                    -5.987276061137261
+                ],
+                [
+                    39.340847000464755,
+                    -5.987278166971163
+                ],
+                [
+                    39.34083023028068,
+                    -5.960158002925742
+                ],
+                [
+                    39.36793404669621,
+                    -5.960140574104503
+                ],
+                [
+                    39.36795215042373,
+                    -5.987260658288568
+                ],
+                [
+                    39.344219970219626,
+                    -5.987276061137261
+                ]
+            ]
+        ],
+        "type": "Polygon"
+    },
+    "bbox": [
+        39.34083023028068,
+        -5.987278166971163,
+        39.36795215042373,
+        -5.960140574104503
+    ],
+    "links": [
+        {
+            "rel": "collection",
+            "href": "../collection.json",
+            "type": "application/json"
+        },
+        {
+            "rel": "root",
+            "href": "../../catalog.json",
+            "type": "application/json"
+        },
+        {
+            "rel": "parent",
+            "href": "../collection.json",
+            "type": "application/json"
+        }
+    ],
+    "assets": {
+        "labels": {
+            "href": "./bc32f1.geojson",
+            "type": "application/geo+json"
+        }
+    },
+    "stac_extensions": [
+        "label"
+    ]
+}
