@@ -1,1 +1,1 @@
-tar -xvf ./../../data/raw/train_tier_1.tgz train_tier_1/kam -C ./../../data/raw
+tar -xvf ./../../data/raw/train_tier_1.tgz -C ./../../data/raw train_tier_1/kam
