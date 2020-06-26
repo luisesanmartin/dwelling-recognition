@@ -1,0 +1,1 @@
+gdal_rasterize -l kampala_buildings32636 -a is_buildin -tr 0.0335353304143876 0.03266412665707779 -a_nodata 0.0 -te 458403.2498 27647.4642 459720.1823 28954.8132 -ot Float32 -of GTiff /scratch/lsanmartin/dwelling-recognition/data/clean/train/kam/labels/kampala_buildings32636.shp /scratch/lsanmartin/dwelling-recognition/data/clean/train/kam/labels/kampala_labels_2.tif
