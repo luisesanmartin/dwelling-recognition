@@ -1,4 +1,6 @@
-data/raw/*.tgz
-data/raw/*.tif
+*.tgz
+*.tif
+*.out
+*.err
 data/clean/train/kam/
 .ipynb_checkpoints
