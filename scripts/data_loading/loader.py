@@ -25,4 +25,4 @@ class dwellingsDataset(Dataset):
         features = np.load(features_file)
         labels = np.load(labels_file)
 
-        return {'features': features, 'labels': labels}
+        return features, labels
