@@ -10,7 +10,7 @@ class dwellingsDataset(Dataset):
         self.features_dir = features_dir
         self.labels_dir = labels_dir
         n = 0
-        for file in os.list_dir(features_dir):
+        for file in os.listdir(features_dir):
             if file.endswith('.npy'):
                 n += 1
         self.total_n = n
