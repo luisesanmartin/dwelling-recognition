@@ -3,8 +3,8 @@ import os
 import numpy as np
 
 class dwellingsDataset(Dataset):
-    
-    def __init__(self, features_dir, labels_dir):
+
+    def __init__(self, features_dir='../../data/clean/train/kam/features', labels_dir='../../data/clean/train/kam/labels'):
         '''
         '''
         self.features_dir = features_dir
