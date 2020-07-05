@@ -4,3 +4,4 @@
 *.err
 data/clean/train/kam/
 .ipynb_checkpoints
+**/__pycache__
