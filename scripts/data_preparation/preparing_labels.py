@@ -76,4 +76,4 @@ prefix = 'kam_label'
 
 for i, image in enumerate(images):
 
-    np.save(path + prefix + '_' + str(i) + '.npy', image)
+    np.save(path + prefix + '_' + str(i) + '.npy', np.moveaxis(image, -1, 0))

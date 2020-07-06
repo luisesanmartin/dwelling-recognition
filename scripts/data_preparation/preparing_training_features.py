@@ -32,66 +32,37 @@ im = Image.open(file)
 x = np.array(im)
 
 
-# In[9]:
-
-
-x.shape
-
-
 # In[14]:
 
 
-def segment_image(image, width):
+def segment_image(image, width, path, prefix):
     size_x, size_y, _ = image.shape
     x = 0
     y = 0
+    i = 0
     rv = []
-    
+
     while x + width <= size_x:
-        
+
         while y + width <= size_y:
-            
+
             sub_image = image[x:x+width, y:y+width]
-            rv.append(sub_image)
+            #rv.append(sub_image)
+            np.save(path+prefix+'_'+str(i)+'.npy', np.moveaxis(sub_image, -1, 0))
             y += width
-    
+            i += 1
+
         y = 0
         x += width
-    
+
     return rv
 
 
 # In[41]:
 
 
-images = segment_image(x, 512)
-
-
-# In[42]:
-
-
-len(images)
-
-
-# In[43]:
-
-
-display(Image.fromarray(images[2000]), Image.LANCZOS)
-
-
-# In[44]:
-
-
-display(Image.fromarray(images[2001]), Image.LANCZOS)
-
-
-# In[47]:
-
-
 path = '../../data/clean/train/kam/features/'
 prefix = 'kam_train'
 
-for i, image in enumerate(images):
-    
-    np.save(path + prefix + '_' + str(i) + '.npy', image)
+segment_image(x, 512, path, prefix)
 
