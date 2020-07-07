@@ -4,6 +4,7 @@
 
 import numpy as np
 from osgeo import gdal
+import os
 
 
 # In[4]:
@@ -58,7 +59,7 @@ def segment_image(image, width):
 # In[41]:
 
 
-images = segment_image(x, 512)
+images = segment_image(x, 128)
 
 
 # In[42]:
@@ -73,6 +74,12 @@ print(len(images))
 
 path = '../../data/clean/train/kam/features/'
 prefix = 'kam_train'
+extension = '.npy'
+files = os.listdir(path)
+
+for file in files:
+    if file.endswith(extension):
+        os.remove(os.path.join(path, file))
 
 for i, image in enumerate(images):
 
