@@ -6,8 +6,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=sbatch_outputs/train_seg.out
 #SBATCH --error=sbatch_outputs/train_seg.err
-#SBATCH --partition=titan
-#SBATCH --mem-per-cpu=10000
+#SBATCH --partition=quadro
+#SBATCH --mem-per-cpu=48000
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1

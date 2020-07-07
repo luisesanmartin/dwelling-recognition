@@ -8,7 +8,7 @@ class net(nn.Module):
 
 	def __init__(self, n_classes=2):
 		super(net, self).__init__()
-		if torch.cusa.is_available():
+		if torch.cuda.is_available():
 			device = torch.device('cuda')
 		else:
 			device = torch.device('cpu')

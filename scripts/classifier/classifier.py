@@ -19,12 +19,17 @@ def train(dataset, model, optimizer, epoch=None, model_name='../../models/kampal
     '''
     '''
 
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
     model = model.to(device=device)
     model.train()
 
     for idx, (x, y) in enumerate(dataset):
+        x = x.float()
+        x = x.to(device=device)
+        y = y.long()
         y = y.to(device=device)
-        optimizer.zero-grad()
+        optimizer.zero_grad()
         output = model(x)
         loss = loss_nll(output, y)
         loss.backward()
@@ -36,7 +41,7 @@ def train(dataset, model, optimizer, epoch=None, model_name='../../models/kampal
     # Saving the model
     torch.save(model, model_name)
 
-    # 
+    # Evaluating accuracy
     model.eval()
     output = model(x)
     predictions = torch.argmax(output.data, dim=1).numpy()
@@ -51,7 +56,7 @@ def main():
     classifier = net().float()
     optimizer = optim.Adam(classifier.parameters(), lr=1e-4)
     dataset = dwellingsDataset()
-    data = DataLoader(dataset, batch_size=500, shuffle=True, num_workers=4)
+    data = DataLoader(dataset, batch_size=100, shuffle=True, num_workers=4)
     epochs = 10
 
     for epoch in range(epochs):
