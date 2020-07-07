@@ -4,7 +4,6 @@
 # In[1]:
 
 
-from PIL import Image
 import numpy as np
 from osgeo import gdal
 
@@ -30,6 +29,7 @@ x = image.ReadAsArray()
 # In[ ]:
 
 
+print('Shape of labels tif image:')
 print(x.shape)
 
 
@@ -65,6 +65,7 @@ images = segment_image(x, 512)
 # In[ ]:
 
 
+print('Number of label images after cropping:')
 print(len(images))
 
 
@@ -76,4 +77,4 @@ prefix = 'kam_label'
 
 for i, image in enumerate(images):
 
-    np.save(path + prefix + '_' + str(i) + '.npy', np.moveaxis(image, -1, 0))
+    np.save(path + prefix + '_' + str(i) + '.npy', image)

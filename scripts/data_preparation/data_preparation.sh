@@ -11,5 +11,5 @@
 #SBATCH --output=data_prep.out
 #SBATCH --error=data_prep.err
 
-#python3 preparing_labels.py
 python3 preparing_training_features.py
+python3 preparing_labels.py

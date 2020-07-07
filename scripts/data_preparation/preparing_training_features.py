@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
 
-
-from PIL import Image
 import numpy as np
+from osgeo import gdal
 
 
 # In[4]:
@@ -17,29 +15,30 @@ file = '../../data/raw/train_tier_1/kam/4e7c7f/4e7c7f.tif'
 # In[6]:
 
 
-Image.MAX_IMAGE_PIXELS = 1713427900
-
-
-# In[7]:
-
-
-im = Image.open(file)
+image = gdal.Open(file)
 
 
 # In[8]:
 
 
-x = np.array(im)
+x = image.ReadAsArray()
+x = np.moveaxis(x, 0, -1)
+
+
+# In[9]:
+
+
+print('Shape of training features tif:')
+print(x.shape)
 
 
 # In[14]:
 
 
-def segment_image(image, width, path, prefix):
+def segment_image(image, width):
     size_x, size_y, _ = image.shape
     x = 0
     y = 0
-    i = 0
     rv = []
 
     while x + width <= size_x:
@@ -47,10 +46,8 @@ def segment_image(image, width, path, prefix):
         while y + width <= size_y:
 
             sub_image = image[x:x+width, y:y+width]
-            #rv.append(sub_image)
-            np.save(path+prefix+'_'+str(i)+'.npy', np.moveaxis(sub_image, -1, 0))
+            rv.append(sub_image)
             y += width
-            i += 1
 
         y = 0
         x += width
@@ -61,8 +58,22 @@ def segment_image(image, width, path, prefix):
 # In[41]:
 
 
+images = segment_image(x, 512)
+
+
+# In[42]:
+
+
+print('Number of features cropped images:')
+print(len(images))
+
+
+# In[47]:
+
+
 path = '../../data/clean/train/kam/features/'
 prefix = 'kam_train'
 
-segment_image(x, 512, path, prefix)
+for i, image in enumerate(images):
 
+    np.save(path + prefix + '_' + str(i) + '.npy', np.moveaxis(image, -1, 0))
