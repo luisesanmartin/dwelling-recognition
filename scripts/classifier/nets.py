@@ -23,7 +23,7 @@ class net(nn.Module):
 
 	def forward(self, x):
 		x = self.batchnorm1(x)
-		x = F.max_pool2d(F.relu(self.conv1(x)), 2)
+		x = F.max_pool2d(F.relu(self.conv1(x)), 4)
 		#x = F.relu(self.conv2(x))
 		#x = F.relu(self.conv3(x))
 		#x = F.relu(self.conv4(x))
