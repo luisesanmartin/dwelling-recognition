@@ -75,7 +75,7 @@ def main():
     optimizer = optim.Adam(classifier.parameters(), lr=1e-4)
     dataset = dwellingsDataset()
     data = DataLoader(dataset, batch_size=100, shuffle=True, num_workers=4)
-    epochs = 3
+    epochs = 2
     results_path = '../../models/'
 
     # Deleting csv files in results_path:
@@ -100,7 +100,7 @@ def main():
 
     # Training the net
     for epoch in range(epochs):
-        train(data, classifier, optimizer, epoch)
+        train(data, classifier, optimizer, epoch, loss_file, accuracy_file)
 
 if __name__ == '__main__':
     if torch.cuda.is_available():
