@@ -16,7 +16,7 @@ def loss_nll(predicts, targets):
 
     return output
 
-def train(dataset, model, optimizer, epoch=None, model_name='../../models/kampala_classifier.pkl', loss_df='../../models/kampala_classifier_losses.csv'):
+def train(dataset, model, optimizer, epoch=None, model_name='../../models/kampala_classifier.pkl'):
     '''
     '''
 
@@ -37,15 +37,14 @@ def train(dataset, model, optimizer, epoch=None, model_name='../../models/kampal
         loss = loss_nll(output, y)
         loss.backward()
         optimizer.step()
-        size = len(df)
-        df.loc[size] = [epoch, idx, loss.item()]
+        df.loc[idx] = [int(epoch), int(idx), loss.item()]
 
         if epoch and idx % 20 == 0:
             print("Epoch %d, Loss: %.4f" % (epoch+1, loss.item()))
 
     # Saving the model and  loss df
     torch.save(model, model_name)
-    df.to_csv(loss_df, index=False)
+    df.to_csv('../../models/kampala_classifier_losses_epoch'+str(epoch)+'.csv', index=False)
 
     # Evaluating accuracy
     model.eval()
@@ -63,7 +62,7 @@ def main():
     optimizer = optim.Adam(classifier.parameters(), lr=1e-4)
     dataset = dwellingsDataset()
     data = DataLoader(dataset, batch_size=100, shuffle=True, num_workers=4)
-    epochs = 50
+    epochs = 10
 
     for epoch in range(epochs):
         train(data, classifier, optimizer, epoch)
