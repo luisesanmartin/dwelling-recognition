@@ -14,7 +14,7 @@ class net(nn.Module):
             device = torch.device('cpu')
 
         self.n_classes = n_classes
-        self.conv1 = nn.Conv2d(4, 64, 1, kernel_size=3, padding=1, padding_mode='reflect')
+        self.conv1 = nn.Conv2d(4, 64, kernel_size=3, padding=1, padding_mode='reflect')
         self.batchnorm1 = nn.BatchNorm2d(64, affine=False)
         self.conv2 = nn.Conv2d(64, 128, 1)
         self.batchnorm2 = nn.BatchNorm2d(128, affine=False)
