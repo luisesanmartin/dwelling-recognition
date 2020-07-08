@@ -38,20 +38,19 @@ def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=N
         loss = loss_nll(output, y)
         loss.backward()
         optimizer.step()
-        
+
         # Saving the loss in the results file:
-        df.loc[idx] = [int(epoch), int(idx), loss.item()]
+        if epoch and loss_file:
+            with open(loss_file, 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([int(epoch), int(idx), loss.item()])
 
         if epoch and idx % 20 == 0:
             print("Epoch %d, Loss: %.4f" % (epoch, loss.item()))
 
-    # Saving the model and  loss df
+    # Saving the model
     if epoch:
         torch.save(model, results_path+'kampala_classifier.pkl')
-    if epoch and loss_file:
-        with open(loss_file, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([int(epoch), int(idx), loss.item()])
 
     # Evaluating accuracy
     model.eval()
