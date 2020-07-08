@@ -26,6 +26,8 @@ def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=N
         torch.cuda.empty_cache()
     model = model.to(device=device)
     model.train()
+    if epoch and loss_file:
+        losses = []
 
     # Training
     for idx, (x, y) in enumerate(dataset):
@@ -41,9 +43,7 @@ def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=N
 
         # Saving the loss in the results file:
         if epoch and loss_file:
-            with open(loss_file, 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([int(epoch), int(idx), loss.item()])
+            losses.append([int(epoch), int(idx), loss.item()])
 
         if epoch and idx % 20 == 0:
             print("Epoch %d, Loss: %.4f" % (epoch, loss.item()))
@@ -51,6 +51,11 @@ def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=N
     # Saving the model
     if epoch:
         torch.save(model, results_path+'kampala_classifier.pkl')
+    if epoch and loss_file:
+        with open(loss_file, 'a', newline='') as file:
+            writer = csv.writer(file)
+            for loss_row in losses:
+                writer.writerow(loss_row)
 
     # Evaluating accuracy
     model.eval()
@@ -63,8 +68,10 @@ def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=N
         print('\nEpoch #', epoch)
     print('Accuracy:', round(accuracy, 2), '%')
     print('\n')
+
+    # Saving the accuracy result:
     if epoch and accuracy_file:
-        with open(accuracy_file, 'w', newline='') as file:
+        with open(accuracy_file, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([int(epoch), accuracy])
 
@@ -80,14 +87,6 @@ def main():
     # Deleting csv files in results_path:
     loss_file = results_path + 'kampala_classifier_losses.csv'
     accuracy_file = results_path + 'kampala_classifier_accuracy.csv'
-    try:
-        os.remove(loss_file)
-    except OSError:
-        print('File', loss_file, 'does not exist yet')
-    try:
-        os.remove(accuracy_file)
-    except OSError:
-        print('File', accuracy_file, 'does not exist yet')
     
     # Creating new csv files with results of classifier:
     with open(loss_file, 'w', newline='') as file:
