@@ -14,6 +14,7 @@ class net(nn.Module):
 			device = torch.device('cpu')
 
 		self.n_classes = n_classes
+		self.batchnorm1 = nn.BatchNorm2d(4, affine=False)
 		self.conv1 = nn.Conv2d(4, 64, 1)
 		self.conv2 = nn.Conv2d(64, 256, 1)
 		self.conv3 = nn.Conv2d(256, 128, 1)
@@ -21,10 +22,11 @@ class net(nn.Module):
 		self.logsoftmax = nn.LogSoftmax(dim=1)
 
 	def forward(self, x):
-		x = F.relu(self.conv1(x))
-		x = F.relu(self.conv2(x))
-		x = F.relu(self.conv3(x))
-		x = F.relu(self.conv4(x))
-		x = self.logsoftmax(x)
+		x = self.batchnorm1(x)
+		x = F.max_pool2d(F.relu(self.conv1(x)), 2)
+		#x = F.relu(self.conv2(x))
+		#x = F.relu(self.conv3(x))
+		#x = F.relu(self.conv4(x))
+		#x = self.logsoftmax(x)
 
 		return x
