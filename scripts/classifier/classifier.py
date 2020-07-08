@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 import pandas as pd
-from nets import net
+from nets import net, net2
 from loader import dwellingsDataset
 
 def loss_nll(predicts, targets):
@@ -18,7 +18,7 @@ def loss_nll(predicts, targets):
 
     return output
 
-def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=None):
+def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=None, net_file=None):
     '''
     '''
 
@@ -26,7 +26,7 @@ def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=N
         torch.cuda.empty_cache()
     model = model.to(device=device)
     model.train()
-    if epoch and loss_file:
+    if loss_file:
         losses = []
 
     # Training
@@ -42,16 +42,16 @@ def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=N
         optimizer.step()
 
         # Saving the loss in the results file:
-        if epoch and loss_file:
+        if loss_file:
             losses.append([int(epoch), int(idx), loss.item()])
 
-        if epoch and idx % 20 == 0:
+        if idx % 20 == 0:
             print("Epoch %d, Loss: %.4f" % (epoch, loss.item()))
 
     # Saving the model
-    if epoch:
-        torch.save(model, results_path+'kampala_classifier.pkl')
-    if epoch and loss_file:
+    if net_file:
+        torch.save(model, net_file)
+    if loss_file:
         with open(loss_file, 'a', newline='') as file:
             writer = csv.writer(file)
             for loss_row in losses:
@@ -64,41 +64,53 @@ def train(dataset, model, optimizer, epoch=None, loss_file=None, accuracy_file=N
     num_correct = (predictions == y.cpu().numpy()).sum()
     num_samples = y.size(0) * y.size(1) * y.size(2)
     accuracy = num_correct/num_samples*100
-    if epoch:
-        print('\nEpoch #', epoch)
+    print('\nEpoch #', epoch)
     print('Accuracy:', round(accuracy, 2), '%')
     print('\n')
 
     # Saving the accuracy result:
-    if epoch and accuracy_file:
+    if accuracy_file:
         with open(accuracy_file, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([int(epoch), accuracy])
 
 def main():
 
-    classifier = net().float()
-    optimizer = optim.Adam(classifier.parameters(), lr=1e-4)
+    classifier1 = net().float()
+    optimizer1 = optim.Adam(classifier1.parameters(), lr=1e-4)
+    classifier2 = net2().float()
+    optimizer2 = optim.Adam(classifier2.parameters(), lr=1e-4)
     dataset = dwellingsDataset()
     data = DataLoader(dataset, batch_size=100, shuffle=True, num_workers=4)
-    epochs = 2
+    epochs = 100
     results_path = '../../models/'
 
-    # Deleting csv files in results_path:
-    loss_file = results_path + 'kampala_classifier_losses.csv'
-    accuracy_file = results_path + 'kampala_classifier_accuracy.csv'
+    # Results files:
+    loss_file1 = results_path + 'kampala_classifier_losses_net1.csv'
+    accuracy_file1 = results_path + 'kampala_classifier_accuracy_net1.csv'
+    net_file1 = results_path + 'kampala_classifier_net1.pkl'
+    loss_file2 = results_path + 'kampala_classifier_losses_net2.csv'
+    accuracy_file2 = results_path + 'kampala_classifier_accuracy_net2.csv'
+    net_file2 = results_path + 'kampala_classifier_net2.pkl'
     
     # Creating new csv files with results of classifier:
-    with open(loss_file, 'w', newline='') as file:
+    with open(loss_file1, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Epoch', 'Iteration', 'Loss'])
-    with open(accuracy_file, 'w', newline='') as file:
+    with open(accuracy_file1, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Epoch', 'Accuracy'])
+    with open(loss_file2, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Epoch', 'Iteration', 'Loss'])
+    with open(accuracy_file2, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Epoch', 'Accuracy'])
 
-    # Training the net
+    # Training nets
     for epoch in range(epochs):
-        train(data, classifier, optimizer, epoch, loss_file, accuracy_file)
+        train(data, classifier1, optimizer1, epoch, loss_file1, accuracy_file1, net_file1)
+        train(data, classifier2, optimizer2, epoch, loss_file2, accuracy_file2, net_file2)
 
 if __name__ == '__main__':
     if torch.cuda.is_available():
